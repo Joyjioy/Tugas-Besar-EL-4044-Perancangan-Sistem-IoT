@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Watering Dashboard</title>
+
+    <link rel="stylesheet" href="/static/styles.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Smart Watering Dashboard</h1>
+
+        <div class="card">
+            <h2>Soil Moisture</h2>
+            <p id="soil">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Pump Status</h2>
+            <p id="pump">OFF</p>
+        </div>
+
+        <div class="card">
+            <h2>Weather</h2>
+            <p id="weather">Loading...</p>
+        </div>
+
+        <div class="card chart-container">
+            <canvas id="soilChart"></canvas>
+        </div>
+
+    </div>
+
+    <script src="/static/app.js"></script>
+
+</body>
+</html>
