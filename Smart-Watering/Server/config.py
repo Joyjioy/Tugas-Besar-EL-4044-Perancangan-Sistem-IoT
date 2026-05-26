@@ -11,7 +11,7 @@ TOPIC_PUMP_STATUS = "smartwatering/pump/status"
 
 TARGET_SOIL = 650
 DRY_LIMIT = 620
-WET_LIMIT = 550
+LIMIT_AKTIF = 550 #range pompa bisa aktif
 
 WATERING_DURATION = 1
 COOLDOWN_SECONDS = 20
