@@ -1,0 +1,618 @@
+:root {
+    --dark-green: #0d3f1c;
+    --deep-green: #123f20;
+    --medium-green: #54a000;
+    --bright-green: #34bd5b;
+    --soft-green: #ddf0df;
+    --pale-green: #eef7ee;
+    --border: #bfc7bf;
+    --text: #2c2f2d;
+    --muted: #626b64;
+    --red: #9b1e2d;
+    --white: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f5f5f2;
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.page {
+    width: min(1240px, 100%);
+    margin: auto;
+    padding: 26px;
+}
+
+.top-header {
+    margin-bottom: 24px;
+}
+
+.top-header h1 {
+    margin: 0 0 10px;
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: #252525;
+}
+
+.top-header p {
+    margin: 0;
+    max-width: 1050px;
+    font-size: 14px;
+    color: #5a625b;
+    line-height: 1.45;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 252px minmax(0, 1fr);
+    gap: 12px;
+}
+
+/* LEFT PANEL */
+
+.left-panel {
+    background: var(--soft-green);
+    min-height: 520px;
+    padding: 22px 18px;
+    border: 1px solid #d4e4d6;
+}
+
+.weather-illustration {
+    height: 170px;
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.cloud {
+    position: absolute;
+    left: 30px;
+    top: 22px;
+    width: 130px;
+    height: 70px;
+}
+
+.cloud span {
+    position: absolute;
+    display: block;
+    background: var(--medium-green);
+    border-radius: 999px;
+}
+
+.cloud-a {
+    width: 75px;
+    height: 38px;
+    left: 0;
+    bottom: 0;
+}
+
+.cloud-b {
+    width: 58px;
+    height: 58px;
+    left: 36px;
+    bottom: 12px;
+}
+
+.cloud-c {
+    width: 50px;
+    height: 42px;
+    left: 82px;
+    bottom: 0;
+}
+
+.dark-circle {
+    position: absolute;
+    width: 92px;
+    height: 92px;
+    background: var(--dark-green);
+    border-radius: 50%;
+    top: 52px;
+    left: 80px;
+}
+
+.rain-bars {
+    position: absolute;
+    top: 72px;
+    left: 154px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.rain-bars span {
+    width: 10px;
+    background: var(--medium-green);
+    display: block;
+}
+
+.rain-bars span:nth-child(1) {
+    height: 18px;
+}
+
+.rain-bars span:nth-child(2) {
+    height: 28px;
+}
+
+.rain-bars span:nth-child(3) {
+    height: 44px;
+}
+
+.rain-bars span:nth-child(4) {
+    height: 58px;
+}
+
+.garden-pill {
+    width: 180px;
+    margin: 0 auto 26px;
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: var(--medium-green);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+}
+
+.garden-pill span {
+    font-size: 26px;
+}
+
+.garden-pill strong {
+    font-size: 18px;
+}
+
+.sensor-block {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.sensor-block p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.sensor-block span {
+    display: block;
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.left-divider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.16);
+    margin-bottom: 26px;
+}
+
+.left-info-row {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 12px;
+    align-items: start;
+    margin-bottom: 28px;
+}
+
+.left-info-row p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #3a433d;
+    white-space: pre-line;
+}
+
+.left-icon {
+    width: 38px;
+    height: 32px;
+    position: relative;
+}
+
+.icon-weather::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    bottom: 6px;
+    width: 36px;
+    height: 15px;
+    border-radius: 999px;
+    background: var(--medium-green);
+}
+
+.icon-weather::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--medium-green);
+}
+
+.icon-rain {
+    display: flex;
+    gap: 5px;
+    align-items: flex-start;
+}
+
+.icon-rain::before,
+.icon-rain::after {
+    content: "";
+    display: block;
+    width: 7px;
+    background: var(--medium-green);
+}
+
+.icon-rain::before {
+    height: 20px;
+}
+
+.icon-rain::after {
+    height: 32px;
+}
+
+/* RIGHT PANEL */
+
+.right-panel {
+    min-width: 0;
+}
+
+/* TOP METRIC CARDS */
+
+.metric-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: white;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+}
+
+.metric-strip-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.metric-card {
+    min-height: 120px;
+    padding: 20px;
+    border-right: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 58px 1fr;
+    gap: 14px;
+    align-items: center;
+}
+
+.metric-card:last-child {
+    border-right: none;
+}
+
+.metric-icon {
+    width: 58px;
+    height: 58px;
+    background: var(--dark-green);
+    border-radius: 50%;
+    position: relative;
+}
+
+.metric-icon::before {
+    content: "";
+    position: absolute;
+    inset: 15px;
+    background: white;
+}
+
+.icon-soil::before {
+    border-radius: 50%;
+}
+
+.icon-pump::before {
+    border-radius: 5px;
+}
+
+.icon-rain-count::before {
+    border-radius: 50%;
+    box-shadow:
+        0 -16px 0 -10px white,
+        0 16px 0 -10px white,
+        -16px 0 0 -10px white,
+        16px 0 0 -10px white;
+}
+
+.icon-total::before {
+    border-radius: 50%;
+    box-shadow:
+        -16px 0 0 -7px white,
+        16px 0 0 -7px white,
+        0 -16px 0 -7px white,
+        0 16px 0 -7px white;
+}
+
+.metric-title {
+    margin: 0 0 8px;
+    color: #3d443f;
+    font-size: 14px;
+}
+
+.metric-card h2 {
+    display: inline-block;
+    min-width: 106px;
+    margin: 0;
+    padding: 8px 12px;
+    background: linear-gradient(90deg, var(--dark-green), #164f24);
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 25px;
+    line-height: 1;
+}
+
+.metric-change {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #179654;
+}
+
+.metric-change.dry {
+    color: var(--red);
+}
+
+.metric-change.normal {
+    color: #807a00;
+}
+
+.metric-change.wet {
+    color: #179654;
+}
+
+.section-label {
+    margin: 0 0 8px 20px;
+    font-size: 19px;
+    color: #303530;
+}
+
+/* MAIN CONTENT GRID */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 18px 22px;
+}
+
+.panel h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #2d302d;
+}
+
+/* CHART FULL WIDTH */
+
+.chart-panel {
+    width: 100%;
+}
+
+.panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.panel-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+}
+
+.panel-heading span {
+    color: var(--muted);
+    font-size: 15px;
+}
+
+.chart-area {
+    height: 340px;
+    padding: 12px;
+    background:
+        linear-gradient(180deg, rgba(223, 241, 223, 0.55), rgba(255, 255, 255, 0.7));
+}
+
+.chart-area canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* SOIL STATISTICS FULL WIDTH */
+
+.soil-stat-panel {
+    width: 100%;
+}
+
+.soil-stat-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1.8fr;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.soil-stat-main {
+    background: var(--pale-green);
+    border-left: 7px solid var(--dark-green);
+    padding: 24px;
+    min-height: 155px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.soil-stat-main span {
+    display: block;
+    color: var(--muted);
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.soil-stat-main strong {
+    display: block;
+    font-size: 56px;
+    line-height: 1;
+    color: #252525;
+}
+
+.soil-stat-main p {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.soil-stat-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.soil-stat-list div {
+    border: 1px solid var(--border);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+}
+
+.soil-stat-list span {
+    display: block;
+    color: var(--muted);
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.soil-stat-list strong {
+    font-size: 44px;
+    line-height: 1;
+    color: var(--dark-green);
+}
+
+.online {
+    color: #179654 !important;
+}
+
+.offline {
+    color: var(--red) !important;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1050px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .left-panel {
+        min-height: auto;
+        display: grid;
+        grid-template-columns: 210px 1fr 1fr;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .garden-pill,
+    .sensor-block,
+    .left-divider {
+        display: none;
+    }
+
+    .weather-illustration {
+        margin-bottom: 0;
+    }
+
+    .metric-strip,
+    .metric-strip-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .metric-card {
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .metric-card:nth-child(2) {
+        border-right: none;
+    }
+
+    .metric-card:last-child {
+        border-right: 1px solid var(--border);
+        border-bottom: none;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .soil-stat-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-area {
+        height: 300px;
+    }
+}
+
+@media (max-width: 680px) {
+    .page {
+        padding: 14px;
+    }
+
+    .top-header h1 {
+        font-size: 34px;
+    }
+
+    .left-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .metric-strip,
+    .metric-strip-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .metric-card {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .metric-card:last-child {
+        border-bottom: none;
+        border-right: none;
+    }
+
+    .soil-stat-list {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-area {
+        height: 260px;
+    }
+
+    .soil-stat-main strong {
+        font-size: 44px;
+    }
+
+    .soil-stat-list strong {
+        font-size: 34px;
+    }
+}

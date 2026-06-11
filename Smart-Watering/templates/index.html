@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agriculture Dashboard</title>
+
+    <link rel="stylesheet" href="/static/styles.css?v=30">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <main class="page">
+
+        <header class="top-header">
+            <h1>Smart agriculture dashboard with watering forecast trend</h1>
+            <p>
+                Dashboard ini menampilkan data smart watering untuk memantau kelembapan tanah,
+                status pompa, kondisi cuaca, serta statistik sistem secara real-time.
+            </p>
+        </header>
+
+        <section class="dashboard">
+
+            <!-- LEFT PANEL -->
+            <aside class="left-panel">
+
+                <div class="weather-illustration">
+                    <div class="cloud">
+                        <span class="cloud-a"></span>
+                        <span class="cloud-b"></span>
+                        <span class="cloud-c"></span>
+                    </div>
+
+                    <div class="dark-circle"></div>
+
+                    <div class="rain-bars">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <div class="garden-pill">
+                    <span>🌱</span>
+                    <strong>Smart Garden</strong>
+                </div>
+
+                <div class="sensor-block">
+                    <p id="sensorStatus">Offline</p>
+                    <span id="lastUpdate">No data received</span>
+                </div>
+
+                <div class="left-divider"></div>
+
+                <div class="left-info-row">
+                    <div class="left-icon icon-weather"></div>
+                    <p id="weather">Loading...</p>
+                </div>
+
+                <div class="left-info-row">
+                    <div class="left-icon icon-rain"></div>
+                    <p id="recommendation">Menunggu data sensor.</p>
+                </div>
+
+            </aside>
+
+            <!-- RIGHT PANEL -->
+            <section class="right-panel">
+
+                <!-- TOP METRICS -->
+                <section class="metric-strip metric-strip-3">
+
+                    <article class="metric-card">
+                        <div class="metric-icon icon-soil"></div>
+                        <div>
+                            <p class="metric-title">Current Soil</p>
+                            <h2 id="soil">0</h2>
+                            <span id="soilStatus" class="metric-change">Unknown</span>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-icon icon-pump"></div>
+                        <div>
+                            <p class="metric-title">Pump Status</p>
+                            <h2 id="pump">OFF</h2>
+                            <span class="metric-change">Actuator condition</span>
+                        </div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-icon icon-rain-count"></div>
+                        <div>
+                            <p class="metric-title">Rain Records</p>
+                            <h2 id="rainCount">0</h2>
+                            <span class="metric-change">Weather history</span>
+                        </div>
+                    </article>
+
+                </section>
+
+                <h3 class="section-label">Smart watering statistics</h3>
+
+                <section class="dashboard-grid">
+
+                    <!-- CHART -->
+                    <article class="panel chart-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Soil moisture trend</h3>
+                                <p>Pembacaan nilai soil moisture terbaru dari sensor</p>
+                            </div>
+                            <span>Live readings</span>
+                        </div>
+
+                        <div class="chart-area">
+                            <canvas id="soilChart"></canvas>
+                        </div>
+                    </article>
+
+                    <!-- SOIL STATISTICS -->
+                    <article class="panel soil-stat-panel">
+                        <h3>Soil statistics</h3>
+
+                        <div class="soil-stat-layout">
+
+                            <div class="soil-stat-main">
+                                <span>Average Soil</span>
+                                <strong id="averageSoil">0</strong>
+                                <p>Rata-rata nilai soil dari data history terakhir.</p>
+                            </div>
+
+                            <div class="soil-stat-list">
+                                <div>
+                                    <span>Minimum Soil</span>
+                                    <strong id="minSoil">0</strong>
+                                </div>
+
+                                <div>
+                                    <span>Maximum Soil</span>
+                                    <strong id="maxSoil">0</strong>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- Hidden elements supaya app.js tetap aman -->
+                    <span id="totalReadings" style="display:none;">0</span>
+                    <span id="pumpOnCount" style="display:none;">0</span>
+
+                </section>
+
+            </section>
+
+        </section>
+
+    </main>
+
+    <script src="/static/app.js?v=30"></script>
+
+</body>
+
+</html>
