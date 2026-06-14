@@ -3,44 +3,41 @@
 #include <ArduinoJson.h>
 
 // ================= CONFIGURATION =================
+// Kredensial WiFi lokal
 const char* ssid         = "CISITU BARU 4G";
 const char* password     = "cisitubaru72";
 
+// Konfigurasi broker MQTT
 const char* mqtt_server  = "iwkrmq.pptik.id";
 const int mqtt_port      = 1883;
-
 const char* mqtt_user    = "/trainerkit:trainerkit";
 const char* mqtt_pass    = "12345678";
 
+// Topik MQTT untuk mendengarkan perintah dan melaporkan status
 const char* topic_subscribe = "smartwatering/pump/cmd";
 const char* topic_status    = "smartwatering/pump/status";
 // =================================================
 
-// Kalau pakai Generic ESP8266, jangan pakai D1.
-// D1 pada Wemos D1 Mini = GPIO5
+// Pemetaan pin aktuator (Wemos D1 Mini: D1 = GPIO5)
 const int PUMP_PIN = 5;
 
-// Sesuaikan dengan relay
-// Jika relay active HIGH:
+// Logika relay
 const int PUMP_ON  = HIGH;
 const int PUMP_OFF = LOW;
-
-// Jika relay active LOW, pakai ini:
-// const int PUMP_ON  = LOW;
-// const int PUMP_OFF = HIGH;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-// Status pompa
+// State management pompa untuk melacak kondisi terkini
 bool pumpRunning = false;
 
-// Safety timeout, agar pompa tidak menyala selamanya jika server gagal kirim OFF
+// Proteksi Fail-Safe: Batas maksimal pompa boleh menyala terus-menerus
 unsigned long pumpStartTime = 0;
 const unsigned long SAFETY_TIMEOUT_MS = 30000; // 30 detik
 
 
 void publishStatus(const char* status) {
+  // Mengirim feedback status ke server agar sinkron
   StaticJsonDocument<100> doc;
   doc["pump"] = status;
 
@@ -52,10 +49,11 @@ void publishStatus(const char* status) {
 
 
 void pumpOn() {
+  // Mencegah pengiriman sinyal HIGH berulang jika pompa sudah menyala
   if (!pumpRunning) {
     digitalWrite(PUMP_PIN, PUMP_ON);
     pumpRunning = true;
-    pumpStartTime = millis();
+    pumpStartTime = millis(); // Mulai timer proteksi timeout
 
     Serial.println("ACTUATOR: Pump ON");
     publishStatus("ON");
@@ -66,6 +64,7 @@ void pumpOn() {
 
 
 void pumpOff() {
+  // Mencegah pengiriman sinyal LOW berulang jika pompa sudah mati
   if (pumpRunning) {
     digitalWrite(PUMP_PIN, PUMP_OFF);
     pumpRunning = false;
@@ -80,42 +79,41 @@ void pumpOff() {
 
 void setup_wifi() {
   delay(10);
-
-  Serial.println();
-  Serial.println("Connecting to WiFi...");
+  Serial.println("\nConnecting to WiFi...");
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
+  // Menahan eksekusi program hingga koneksi WiFi stabil
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
 
-  Serial.println();
-  Serial.println("WiFi connected");
+  Serial.println("\nWiFi connected");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 }
 
 
 void callback(char* topic, byte* payload, unsigned int length) {
+  // Handler yang dieksekusi otomatis saat menerima pesan dari MQTT Broker
   Serial.print("Command arrived [");
   Serial.print(topic);
   Serial.print("] ");
 
   String message = "";
-
   for (unsigned int i = 0; i < length; i++) {
     message += (char)payload[i];
   }
-
   Serial.println(message);
 
+  // Abaikan pesan jika berasal dari topik yang tidak relevan
   if (String(topic) != topic_subscribe) {
     return;
   }
 
+  // Melakukan parsing pada format JSON
   StaticJsonDocument<200> doc;
   DeserializationError error = deserializeJson(doc, message);
 
@@ -132,14 +130,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
     return;
   }
 
+  // Eksekusi fungsi aktuator berdasarkan instruksi dari server
   String actionString = String(action);
-
   if (actionString == "ON") {
     pumpOn();
-  }
+  } 
   else if (actionString == "OFF") {
     pumpOff();
-  }
+  } 
   else {
     Serial.print("Unknown action: ");
     Serial.println(actionString);
@@ -148,6 +146,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 
 void reconnect() {
+  // Menjaga agar perangkat aktuator selalu terhubung ulang jika koneksi putus
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection (Actuator Node)...");
 
@@ -157,8 +156,8 @@ void reconnect() {
     if (client.connect(clientId.c_str(), mqtt_user, mqtt_pass)) {
       Serial.println("connected");
 
+      // Subscribe
       client.subscribe(topic_subscribe);
-
       Serial.print("Subscribed to: ");
       Serial.println(topic_subscribe);
 
@@ -168,7 +167,6 @@ void reconnect() {
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println(" try again in 5 seconds");
-
       delay(5000);
     }
   }
@@ -178,16 +176,15 @@ void reconnect() {
 void setup() {
   Serial.begin(115200);
 
+  // Deklarasi pin dan inisialisasi safe state (wajib mati saat pertama menyala)
   pinMode(PUMP_PIN, OUTPUT);
-
-  // Kondisi awal wajib OFF
   digitalWrite(PUMP_PIN, PUMP_OFF);
   pumpRunning = false;
 
   setup_wifi();
 
   client.setServer(mqtt_server, mqtt_port);
-  client.setCallback(callback);
+  client.setCallback(callback); // Mendaftarkan fungsi penerima pesan
 }
 
 
@@ -196,10 +193,11 @@ void loop() {
     reconnect();
   }
 
+  // Mempertahankan proses lalu lintas data MQTT di latar belakang
   client.loop();
 
-  // Safety timeout: jika pompa ON terlalu lama dan tidak ada OFF dari server,
-  // aktuator akan mematikan pompa sendiri.
+  // Proteksi Fail-Safe:
+  // Mematikan pompa secara paksa jika menyala melampaui batas waktu aman (30 detik).
   if (pumpRunning && millis() - pumpStartTime >= SAFETY_TIMEOUT_MS) {
     Serial.println("SAFETY TIMEOUT: Pump forced OFF");
     pumpOff();
